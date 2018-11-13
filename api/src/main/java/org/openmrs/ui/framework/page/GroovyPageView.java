@@ -42,17 +42,20 @@ public class GroovyPageView implements PageView {
 		try {
 			return boundTemplate.toString();
 		} catch (RuntimeException ex) {
+			String message = "Contradicting privileges.";
 			APIAuthenticationException authEx = ExceptionUtil.findExceptionInChain(ex, APIAuthenticationException.class);
 			if (authEx != null)
-				throw authEx;
+				throw authEx(message);
+				//throw authEx;
 			
 			ContextAuthenticationException cAuthEx = ExceptionUtil.findExceptionInChain(ex, ContextAuthenticationException.class);
 			if (cAuthEx != null)
-				throw cAuthEx;
+				throw cAuthEx(message);
+				//throw cAuthEx;
 
-            String message = "Error rendering page view for " + context.getRequest().getPageName() + ". ";
-            message += "Model properties:\n" + OpenmrsUtil.join(model.keySet(), " \n");
-            throw new ViewException(message, ex);
+            //String message = "Error rendering page view for " + context.getRequest().getPageName() + ". ";
+            //message += "Model properties:\n" + OpenmrsUtil.join(model.keySet(), " \n");
+            throw new ViewException(message);
 		}
 
 	}
